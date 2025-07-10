@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block title %}Product List{% endblock %}
+{% block content %}
+<h2>Product List</h2>
+<a href="{% url 'product-create' %}" class="btn btn-primary mb-3">Add Product</a>
+<table class="table table-bordered">
+    <thead class="table-dark">
+        <tr>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Tax %</th>
+            <th>Discount %</th>
+            <th>Stock</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for product in object_list %}
+        <tr>
+            <td>{{ product.name }}</td>
+            <td>{{ product.price }}</td>
+            <td>{{ product.tax_percent }}</td>
+            <td>{{ product.discount_percent }}</td>
+            <td>{{ product.stock }}</td>
+            <td>
+                <a href="{% url 'product-update' product.id %}" class="btn btn-sm btn-warning">Edit</a>
+                <a href="{% url 'product-delete' product.id %}" class="btn btn-sm btn-danger">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

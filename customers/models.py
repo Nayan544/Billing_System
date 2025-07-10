@@ -1,0 +1,8 @@
+from django.db import models
+
+class Customer(models.Model):
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
+    gstin = models.CharField(max_length=15, blank=True)
+    contact = models.CharField(max_length=15)
+    address = models.TextField()
