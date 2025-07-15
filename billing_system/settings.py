@@ -31,6 +31,9 @@ ALLOWED_HOSTS = [
     'localhost',
 ]
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://billing-system-1hqn.onrender.com",
+]
 
 # Application definition
 
