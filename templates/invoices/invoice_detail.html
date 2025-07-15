@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block title %}Invoice Detail{% endblock %}
+{% block content %}
+<h2>Invoice #{{ invoice.id }} - {{ invoice.customer.name }}</h2>
+<p>
+    Email: {{ invoice.customer.email }}<br>
+    GST No.: {{ invoice.customer.gstin }}<br>
+    contact: {{ invoice.customer.contact }}<br>
+    Address: {{ invoice.customer.address }}<br>
+    Date: {{ invoice.date }}
+</p>
+<hr>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th>Price</th>
+            <th>Tax%</th>
+            <th>Discount%</th>
+            <th>Qty</th>
+            <th>Total Price</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in invoice.items.all %}
+        <tr>
+            <td>{{ item.product.name }}</td>
+            <td>{{ item.product.price }}</td>
+            <td>{{ item.product.tax_percent }}</td>
+            <td>{{ item.product.discount_percent }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>{{ item.total_price }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<h4 class="mt-4">Grand Total: ₹{{ invoice.total_amount }}</h4>
+<h4>Payments</h4>
+<ul>
+    {% for p in invoice.payments.all %}
+    <li>{{ p.date }} - ₹{{ p.amount }} via {{ p.method }} {% if p.note %}- {{ p.note }}{% endif %}</li>
+    {% endfor %}
+</ul>
+<!-- <p><strong>Paid:</strong> ₹{{ invoice.amount_paid }}</p>
+<p><strong>Balance:</strong> ₹{{ invoice.balance_due }}</p> -->
+<a href="{% url 'invoice-add-payment' invoice.id %}" class="btn btn-sm btn-warning">Add Payment</a>
+<!-- <a href="{% url 'invoice-create' %}" class="btn btn-success">Add Item</a> -->
+<a href="{% url 'invoice-list' %}" class="btn btn-dark btn-sm">◀Back</a>
+{% endblock %}

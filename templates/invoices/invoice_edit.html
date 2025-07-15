@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}Edit Invoice{% endblock %}
+{% block content %}
+<h2>Edit Invoice #{{ invoice.id }}</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <hr>
+    <h4>Edit Items</h4>
+    {{ formset.management_form }}
+    {% for form in formset %}
+        <div class="row mb-2">
+            <div class="col-md-6">{{ form.product }}</div>
+            <div class="col-md-3">{{ form.quantity }}</div>
+            <div class="col-md-3">{{ form.DELETE }}</div>
+        </div>
+    {% endfor %}
+    <button type="submit" class="btn btn-success">Update Invoice</button>
+    <a href="{% url 'invoice-list' %}" class="btn btn-secondary">Cancel</a>
+</form>
+{% endblock %}

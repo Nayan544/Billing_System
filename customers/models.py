@@ -6,3 +6,6 @@ class Customer(models.Model):
     gstin = models.CharField(max_length=15, blank=True)
     contact = models.CharField(max_length=15)
     address = models.TextField()
+
+    def __str__(self):
+        return self.name

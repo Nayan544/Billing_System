@@ -7,3 +7,6 @@ class Product(models.Model):
     tax_percent = models.DecimalField(max_digits=5, decimal_places=2, default=0.00)
     discount_percent = models.DecimalField(max_digits=5, decimal_places=2, default=0.00)
     stock = models.PositiveIntegerField(default=0)
+
+    def __str__(self):
+        return self.name

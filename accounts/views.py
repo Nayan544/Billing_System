@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from .forms import LoginForm
+from django.contrib.auth import logout
 
 def custom_login(request):
     if request.method == 'POST':
@@ -19,3 +20,8 @@ def custom_login(request):
     else:
         form = LoginForm()
     return render(request, 'accounts/login.html', {'form': form})
+
+
+def logout_view(request):
+    logout(request)
+    return redirect('login')
