@@ -1,9 +1,11 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
 from .models import Invoice, InvoiceItem
 from .forms import InvoiceForm, InvoiceItemFormSet, InvoicePaymentForm
 from django.views.generic import ListView, DeleteView
 from django.forms import inlineformset_factory
 from django.urls import reverse_lazy
+from .utils import render_to_pdf
+from .utils import render_to_pdf
 
 def create_invoice(request):
     if request.method == 'POST':
@@ -38,21 +40,6 @@ class invoiceDeleteView(DeleteView):
     template_name = 'invoices/invoice_delete.html'
     success_url = reverse_lazy('invoice-list')
 
-
-def add_payment(request, pk):
-    invoice = get_object_or_404(Invoice, pk=pk)
-    if request.method == 'POST':
-        form = InvoicePaymentForm(request.POST)
-        if form.is_valid():
-            payment = form.save(commit=False)
-            payment.invoice = invoice
-            payment.save()
-            return redirect('invoice-detail', pk=invoice.pk)
-    else:
-        form = InvoicePaymentForm()
-    return render(request, 'invoices/add_payment.html', {'form': form, 'invoice': invoice})
-
-
 def edit_invoice(request, pk):
     invoice = get_object_or_404(Invoice, pk=pk)
     InvoiceItemFormSet = inlineformset_factory(
@@ -78,3 +65,26 @@ def edit_invoice(request, pk):
         'formset': formset,
         'invoice': invoice,
     })
+
+
+def invoice_pdf_view(request, pk):
+    invoice = get_object_or_404(Invoice, pk=pk)
+    context = {
+        'invoice': invoice,
+        'items': invoice.items.all(),
+        'total': invoice.total_amount(),
+        'paid': invoice.amount_paid,
+        'due': invoice.balance_due,
+    }
+    pdf = render_to_pdf('invoices/invoice_pdf.html', context)
+    return HttpResponse(pdf, content_type='application/pdf')
+
+def add_payment(request, pk):
+    invoice = get_object_or_404(Invoice, pk=pk)
+    form = InvoicePaymentForm(request.POST or None)
+    if request.method == 'POST' and form.is_valid():
+        payment = form.save(commit=False)
+        payment.invoice = invoice
+        payment.save()
+        return redirect('invoice-detail', invoice.id)
+    return render(request, 'invoices/add_payment.html', {'form': form, 'invoice': invoice})

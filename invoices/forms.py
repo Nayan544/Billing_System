@@ -1,7 +1,6 @@
 from django import forms
 from django.forms import inlineformset_factory
 from .models import Invoice, InvoiceItem, InvoicePayment
-
 class InvoiceForm(forms.ModelForm):
     class Meta:
         model = Invoice
@@ -19,6 +18,7 @@ InvoiceItemFormSet = inlineformset_factory(
         'quantity': forms.NumberInput(attrs={'class': 'form-control'}),
     }
 )
+
 
 class InvoicePaymentForm(forms.ModelForm):
     class Meta:

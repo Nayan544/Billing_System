@@ -11,6 +11,14 @@ class Invoice(models.Model):
 
     def __str__(self):
         return f"Invoice #{self.id} for {self.customer.name}"
+    
+    @property
+    def amount_paid(self):
+        return sum(p.amount for p in self.payments.all())
+
+    @property
+    def balance_due(self):
+        return round(self.total_amount() - self.amount_paid, 2)
 
 class InvoiceItem(models.Model):
     invoice = models.ForeignKey(Invoice, on_delete=models.CASCADE, related_name='items')
@@ -34,7 +42,6 @@ class InvoicePayment(models.Model):
         ('card', 'Card'),
         ('bank', 'Bank Transfer'),
     )
-
     invoice = models.ForeignKey(Invoice, on_delete=models.CASCADE, related_name='payments')
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     method = models.CharField(max_length=10, choices=PAYMENT_METHODS)
@@ -43,11 +50,3 @@ class InvoicePayment(models.Model):
 
     def __str__(self):
         return f"{self.method} - ₹{self.amount}"
-    
-    @property
-    def amount_paid(self):
-        return sum(p.amount for p in self.payments.all())
-
-    @property
-    def balance_due(self):
-        return round(self.total_amount() - self.amount_paid, 2)

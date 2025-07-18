@@ -36,14 +36,13 @@
 </table>
 <h4 class="mt-4">Grand Total: ₹{{ invoice.total_amount }}</h4>
 <h4>Payments</h4>
-<ul>
-    {% for p in invoice.payments.all %}
-    <li>{{ p.date }} - ₹{{ p.amount }} via {{ p.method }} {% if p.note %}- {{ p.note }}{% endif %}</li>
-    {% endfor %}
-</ul>
-<!-- <p><strong>Paid:</strong> ₹{{ invoice.amount_paid }}</p>
-<p><strong>Balance:</strong> ₹{{ invoice.balance_due }}</p> -->
-<a href="{% url 'invoice-add-payment' invoice.id %}" class="btn btn-sm btn-warning">Add Payment</a>
-<!-- <a href="{% url 'invoice-create' %}" class="btn btn-success">Add Item</a> -->
+🍒📄
+{% for p in invoice.payments.all %}
+  <p>{{ p.date }} - ₹{{ p.amount }} ({{ p.method }})</p>
+{% endfor %}
+<p>Paid: ₹{{ invoice.amount_paid }}</p>
+<p>Due: ₹{{ invoice.balance_due }}</p>
+<a href="{% url 'invoice-add-payment' invoice.id %}" class="btn btn-warning btn-sm">Add Payment</a>
+<a href="{% url 'invoice-pdf' invoice.id %}" class="btn btn-info btn-sm" target="_blank">Download PDF</a>
 <a href="{% url 'invoice-list' %}" class="btn btn-dark btn-sm">◀Back</a>
 {% endblock %}
