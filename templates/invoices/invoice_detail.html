@@ -36,7 +36,6 @@
 </table>
 <h4 class="mt-4">Grand Total: ₹{{ invoice.total_amount }}</h4>
 <h4>Payments</h4>
-🍒📄
 {% for p in invoice.payments.all %}
   <p>{{ p.date }} - ₹{{ p.amount }} ({{ p.method }})</p>
 {% endfor %}
