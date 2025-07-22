@@ -14,7 +14,7 @@ def custom_login(request):
             )
             if user is not None:
                 login(request, user)
-                return redirect('customer-list')  # or any dashboard view
+                return redirect('invoice-list')  # or any dashboard view
             else:
                 form.add_error(None, 'Invalid credentials')
     else:

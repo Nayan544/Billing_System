@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
 from .models import Invoice, InvoiceItem
-from .forms import InvoiceForm, InvoiceItemFormSet, InvoicePaymentForm
+from .forms import InvoiceForm, InvoiceItemFormSet, InvoicePaymentForm, SingleItemForm
 from django.views.generic import ListView, DeleteView
 from django.forms import inlineformset_factory
 from django.urls import reverse_lazy
@@ -88,3 +88,14 @@ def add_payment(request, pk):
         payment.save()
         return redirect('invoice-detail', invoice.id)
     return render(request, 'invoices/add_payment.html', {'form': form, 'invoice': invoice})
+
+
+def add_invoice_item(request, pk):
+    invoice = get_object_or_404(Invoice, pk=pk)
+    form = SingleItemForm(request.POST or None)
+    if form.is_valid():
+        item = form.save(commit=False)
+        item.invoice = invoice
+        item.save()
+        return redirect('invoice-detail', invoice.id)
+    return render(request, 'invoices/invoice_add_item.html', {'form': form, 'invoice': invoice})

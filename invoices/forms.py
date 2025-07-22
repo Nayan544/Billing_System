@@ -29,3 +29,9 @@ class InvoicePaymentForm(forms.ModelForm):
             'method': forms.Select(attrs={'class': 'form-control'}),
             'note': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
         }
+
+
+class SingleItemForm(forms.ModelForm):
+    class Meta:
+        model = InvoiceItem
+        fields = ['product', 'quantity']
